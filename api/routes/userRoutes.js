@@ -20,8 +20,5 @@ function authenticateLogin(req, res, next) {
         return res.json(user);
       }
     })
-  } else {
-    const err = new Error('All fields required')
-    err.status = 400;
   }
 }
