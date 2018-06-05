@@ -21,7 +21,4 @@ exports.create_user = function(req, res) {
       res.json(user);
     });
   }
-
-
-
 };
