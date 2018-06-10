@@ -6,13 +6,16 @@ const User = require('./api/models/userModel');
 const Room = require('./api/models/roomModel');
 const bodyParser = require('body-parser');
 
+const cors = require('cors')
+app.use(cors())
+
 const WebSocket = require('ws').Server;
 let connectedUsers = [];
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost/Tetrisdb');
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const roomRoutes = require('./api/routes/roomRoutes');

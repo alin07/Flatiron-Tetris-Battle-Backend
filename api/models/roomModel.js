@@ -9,13 +9,13 @@ const RoomSchema = new Schema({
     trim: true
   },
   host: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true
   },
   users: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'User',
+    required: true
   }]
 });
 
