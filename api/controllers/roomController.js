@@ -34,7 +34,6 @@ exports.get_room = function(req, res) {
 };
 
 exports.leave_room = function(req, res) {
-  console.log(req.params.userId)
   Room.findOneAndUpdate({ _id: req.params.roomId },
     { $pull: {users: req.body.userId} },
     { new: true },

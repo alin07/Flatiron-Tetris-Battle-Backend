@@ -14,7 +14,6 @@ exports.get_users = function(req, res) {
 };
 
 exports.get_users_by_room_id = function(req, res) {
-
   Room.findById(req.params.roomId, function(err, room) {
     if (err)
       res.send(err);
