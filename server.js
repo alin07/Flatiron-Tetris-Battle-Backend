@@ -50,12 +50,14 @@ wss.on('connection', function connection(ws) {
 
     switch(msg.type) {
       case 'DISBAND':
-        console.log('disband!')
+        console.log('disband!', connectedUsers[msg.subscription].length)
         delete connectedUsers[msg.subscription]
+        console.log('disbanded!!', connectedUsers[msg.subscription])
         break;
       case 'LEAVE':
+        console.log('before leave!', connectedUsers[msg.subscription].length)
         connectedUsers[msg.subscription] = connectedUsers[msg.subscription].filter(u => u._id !== msg.user)
-        console.log('leave!')
+        console.log('after leave!', connectedUsers[msg.subscription].length)
         break;
     }
   });
@@ -68,9 +70,9 @@ wss.on('connection', function connection(ws) {
 });
 
 function sendAll (clients, message) {
-    for (var i=0; i < clients.length; i++) {
-        clients[i].send(message);
-    }
+  for (var i=0; i < clients.length; i++) {
+      clients[i].send(message);
+  }
 }
 
 server.listen(process.env.PORT || 3000, () => {
