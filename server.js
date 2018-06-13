@@ -45,7 +45,10 @@ wss.on('connection', function connection(ws) {
       connectedUsers[msg.subscription][msg.payload._id] = ws
       console.log('pushing into '+msg.subscription+": ", Object.keys(connectedUsers[msg.subscription][msg.payload._id]))
     }
-    sendAll(Object.keys(connectedUsers[msg.subscription]), connectedUsers[msg.subscription], JSON.stringify(msg));
+
+
+   sendAll(Object.keys(connectedUsers[msg.subscription]), connectedUsers[msg.subscription], JSON.stringify(msg));
+
 
     switch(msg.type) {
       case 'DISBAND':
@@ -71,14 +74,14 @@ wss.on('connection', function connection(ws) {
 function sendAll (keys, clients, message) {
 
   for (let key in keys) {
-    if (keys.hasOwnProperty(key)) {
+    if (keys.hasOwnProperty(key) && clients[keys[key]].readyState === clients[keys[key]].OPEN) {
       // console.log('CLIENTS', clients, 'KEY', keys[key])
         clients[keys[key]].send(message);
+
     }
+  }
+}
 
-}
-}
 server.listen(process.env.PORT || 3000, () => {
-
   console.log(`server started on port ${server.address().port}`)
 })
