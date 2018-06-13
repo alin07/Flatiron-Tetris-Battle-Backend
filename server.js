@@ -39,25 +39,24 @@ wss.on('connection', function connection(ws) {
 
     if(!connectedUsers[msg.subscription]){
       connectedUsers[msg.subscription]=[]
-      console.log('created a key in object: ', connectedUsers[msg.subscription])
+      console.log('created a key in object: ', Object.keys(connectedUsers[msg.subscription]))
     }
     if(connectedUsers[msg.subscription].indexOf(ws) < 0){
-      connectedUsers[msg.subscription].push(ws)
-      console.log('pushing into '+msg.subscription+": ", connectedUsers[msg.subscription].length)
+      connectedUsers[msg.subscription][msg.payload._id] = ws
+      console.log('pushing into '+msg.subscription+": ", Object.keys(connectedUsers[msg.subscription][msg.payload._id]))
     }
-
-    sendAll(connectedUsers[msg.subscription], JSON.stringify(msg));
+    sendAll(Object.keys(connectedUsers[msg.subscription]), connectedUsers[msg.subscription], JSON.stringify(msg));
 
     switch(msg.type) {
       case 'DISBAND':
-        console.log('disband!', connectedUsers[msg.subscription].length)
+        console.log('disband!', Object.keys(connectedUsers[msg.subscription]).length)
         delete connectedUsers[msg.subscription]
         console.log('disbanded!!', connectedUsers[msg.subscription])
         break;
       case 'LEAVE':
-        console.log('before leave!', connectedUsers[msg.subscription].length)
-        connectedUsers[msg.subscription] = connectedUsers[msg.subscription].filter(u => u._id !== msg.user)
-        console.log('after leave!', connectedUsers[msg.subscription].length)
+        console.log('before leave!', Object.keys(connectedUsers[msg.subscription]).length)
+        delete connectedUsers[msg.subscription][msg.payload.userId]
+        console.log('after leave!', Object.keys(connectedUsers[msg.subscription]).length)
         break;
     }
   });
@@ -69,12 +68,17 @@ wss.on('connection', function connection(ws) {
 
 });
 
-function sendAll (clients, message) {
-  for (var i=0; i < clients.length; i++) {
-      clients[i].send(message);
-  }
-}
+function sendAll (keys, clients, message) {
 
+  for (let key in keys) {
+    if (keys.hasOwnProperty(key)) {
+      // console.log('CLIENTS', clients, 'KEY', keys[key])
+        clients[keys[key]].send(message);
+    }
+
+}
+}
 server.listen(process.env.PORT || 3000, () => {
+
   console.log(`server started on port ${server.address().port}`)
 })
